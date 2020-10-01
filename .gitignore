@@ -1,14 +1,18 @@
-# Compiled class file
+# Compiled class file #
 *.class
 
-# Log file
-*.log
 
-# BlueJ files
-*.ctxt
+/target/
+!.mvn/wrapper/maven-wrapper.jar
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
+# STS #
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
 
 # Package Files #
 *.jar
@@ -18,6 +22,3 @@
 *.zip
 *.tar.gz
 *.rar
-
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
