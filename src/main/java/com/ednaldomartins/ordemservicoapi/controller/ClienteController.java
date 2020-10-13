@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -39,7 +39,7 @@ public class ClienteController {
 	}
 	
 	@GetMapping("/{clienteId}")
-	public ResponseEntity<Cliente> buscarCliente(@PathVariable Long clienteId) {
+	public ResponseEntity<Cliente> buscar(@PathVariable Long clienteId) {
 		Optional<Cliente> cliente = clienteRepository.findById(clienteId);
 		
 		if(cliente.isPresent()) {
@@ -51,14 +51,14 @@ public class ClienteController {
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Cliente adicionar(@RequestBody Cliente cliente) {
+	public Cliente adicionar(@Valid @RequestBody Cliente cliente) {
 		return clienteRepository.save(cliente);
 	}
 	
 	@PutMapping("/{clienteId}")
-	public ResponseEntity<Cliente> atualizarCliente(
+	public ResponseEntity<Cliente> atualizar(
 			@PathVariable Long clienteId, 
-			@RequestBody Cliente cliente
+			@Valid @RequestBody Cliente cliente
 			) {
 		
 		if (!clienteRepository.existsById(clienteId)) {
@@ -72,7 +72,7 @@ public class ClienteController {
 	}
 	
 	@DeleteMapping("/{clienteId}")
-	public ResponseEntity<Void> excluirCliente(@PathVariable Long clienteId) {
+	public ResponseEntity<Void> excluir(@PathVariable Long clienteId) {
 		if (!clienteRepository.existsById(clienteId)) {
 			return ResponseEntity.notFound().build();
 		}
