@@ -3,6 +3,10 @@ package com.ednaldomartins.ordemservicoapi.exceptionhandler;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+@JsonInclude(Include.NON_NULL)
 public class ApiResponseError {
 	
 	private Integer status;
@@ -11,6 +15,19 @@ public class ApiResponseError {
 	
 	private List<Field> campos;
 	
+	public ApiResponseError(Integer status, LocalDateTime data, String titulo) {
+		super();
+		this.status = status;
+		this.data = data;
+		this.titulo = titulo;
+	}
+	
+	public ApiResponseError(Integer status, LocalDateTime data, String titulo, List<Field> campos) {
+		this(status, data, titulo);
+		this.campos = campos;
+	}
+	
+
 	public static class Field {
 		
 		private String nome;

@@ -23,10 +23,11 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 	@ExceptionHandler(NegocioException.class)
 	public ResponseEntity<Object> handleNegocio(NegocioException exception, WebRequest request) {
 		HttpStatus status = HttpStatus.BAD_REQUEST;
-		ApiResponseError apiResponseError = new ApiResponseError();
-		apiResponseError.setStatus(status.value());
-		apiResponseError.setTitulo(exception.getMessage());
-		apiResponseError.setData(LocalDateTime.now());
+		ApiResponseError apiResponseError = new ApiResponseError(
+				status.value(),
+				LocalDateTime.now(),
+				exception.getMessage()
+				);
 		
 		return handleExceptionInternal(exception, apiResponseError, new HttpHeaders(), status, request);
 	}
@@ -47,11 +48,12 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 			campos.add(new ApiResponseError.Field(nome, mensagem));
 		}
 		
-		ApiResponseError apiResponseError = new ApiResponseError();
-		apiResponseError.setStatus(status.value());
-		apiResponseError.setTitulo("Um ou mais campos estão inválidos.");
-		apiResponseError.setData(LocalDateTime.now());
-		apiResponseError.setCampos(campos);
+		ApiResponseError apiResponseError = new ApiResponseError(
+				status.value(),
+				LocalDateTime.now(),
+				"Um ou mais campos estão inválidos.",
+				campos
+				);
 		
 		return super.handleExceptionInternal(ex, apiResponseError, headers, status, request);
 	}
