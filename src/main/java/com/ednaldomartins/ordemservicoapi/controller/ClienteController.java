@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ednaldomartins.ordemservicoapi.domain.model.Cliente;
 import com.ednaldomartins.ordemservicoapi.domain.repository.ClienteRepository;
+import com.ednaldomartins.ordemservicoapi.domain.service.CrudCliente;
 
 @RestController
 @RequestMapping("/clientes")
@@ -32,6 +33,9 @@ public class ClienteController {
 	
 	@Autowired
 	private ClienteRepository clienteRepository;
+	
+	@Autowired
+	private CrudCliente crudCliente;
 	
 	@GetMapping()
 	public List<Cliente> Listar() {
@@ -52,7 +56,7 @@ public class ClienteController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public Cliente adicionar(@Valid @RequestBody Cliente cliente) {
-		return clienteRepository.save(cliente);
+		return crudCliente.salvar(cliente);
 	}
 	
 	@PutMapping("/{clienteId}")
@@ -66,7 +70,7 @@ public class ClienteController {
 		}
 		
 		cliente.setId(clienteId);
-		cliente = clienteRepository.save(cliente);
+		cliente = crudCliente.salvar(cliente);
 		
 		return ResponseEntity.ok(cliente);
 	}
@@ -77,7 +81,7 @@ public class ClienteController {
 			return ResponseEntity.notFound().build();
 		}
 		
-		clienteRepository.deleteById(clienteId);
+		crudCliente.excluir(clienteId);
 		
 		return ResponseEntity.noContent().build();
 	}
