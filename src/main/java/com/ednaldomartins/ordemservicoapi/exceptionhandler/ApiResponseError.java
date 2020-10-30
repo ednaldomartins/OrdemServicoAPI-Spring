@@ -1,6 +1,6 @@
 package com.ednaldomartins.ordemservicoapi.exceptionhandler;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -10,19 +10,19 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 public class ApiResponseError {
 	
 	private Integer status;
-	private LocalDateTime data;
+	private OffsetDateTime data;
 	private String titulo;
 	
 	private List<Field> campos;
 	
-	public ApiResponseError(Integer status, LocalDateTime data, String titulo) {
+	public ApiResponseError(Integer status, OffsetDateTime data, String titulo) {
 		super();
 		this.status = status;
 		this.data = data;
 		this.titulo = titulo;
 	}
 	
-	public ApiResponseError(Integer status, LocalDateTime data, String titulo, List<Field> campos) {
+	public ApiResponseError(Integer status, OffsetDateTime data, String titulo, List<Field> campos) {
 		this(status, data, titulo);
 		this.campos = campos;
 	}
@@ -65,11 +65,11 @@ public class ApiResponseError {
 		this.status = status;
 	}
 	
-	public LocalDateTime getData() {
+	public OffsetDateTime getData() {
 		return data;
 	}
 	
-	public void setData(LocalDateTime data) {
+	public void setData(OffsetDateTime data) {
 		this.data = data;
 	}
 	

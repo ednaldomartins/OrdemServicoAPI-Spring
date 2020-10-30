@@ -1,6 +1,6 @@
 package com.ednaldomartins.ordemservicoapi.exceptionhandler;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +25,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		HttpStatus status = HttpStatus.BAD_REQUEST;
 		ApiResponseError apiResponseError = new ApiResponseError(
 				status.value(),
-				LocalDateTime.now(),
+				OffsetDateTime.now(),
 				exception.getMessage()
 				);
 		
@@ -50,7 +50,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		
 		ApiResponseError apiResponseError = new ApiResponseError(
 				status.value(),
-				LocalDateTime.now(),
+				OffsetDateTime.now(),
 				"Um ou mais campos estão inválidos.",
 				campos
 				);
