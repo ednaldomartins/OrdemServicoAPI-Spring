@@ -1,4 +1,4 @@
-package com.ednaldomartins.ordemservicoapi.domain.repository;
+package com.ednaldomartins.ordemservicoapi.data.repository;
 
 import java.util.List;
 

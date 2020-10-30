@@ -1,16 +1,16 @@
-package com.ednaldomartins.ordemservicoapi.domain.service;
+package com.ednaldomartins.ordemservicoapi.data.service;
 
 import java.time.OffsetDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ednaldomartins.ordemservicoapi.data.repository.ClienteRepository;
+import com.ednaldomartins.ordemservicoapi.data.repository.OrdemServicoRepository;
 import com.ednaldomartins.ordemservicoapi.domain.exception.NegocioException;
 import com.ednaldomartins.ordemservicoapi.domain.model.Cliente;
 import com.ednaldomartins.ordemservicoapi.domain.model.OrdemServico;
 import com.ednaldomartins.ordemservicoapi.domain.model.StatusOrdemServico;
-import com.ednaldomartins.ordemservicoapi.domain.repository.ClienteRepository;
-import com.ednaldomartins.ordemservicoapi.domain.repository.OrdemServicoRepository;
 
 @Service
 public class CrudOrdemServico {

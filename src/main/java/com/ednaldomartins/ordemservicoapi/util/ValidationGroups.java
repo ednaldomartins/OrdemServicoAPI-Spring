@@ -1,4 +1,4 @@
-package com.ednaldomartins.ordemservicoapi.domain;
+package com.ednaldomartins.ordemservicoapi.util;
 
 public interface ValidationGroups {
 

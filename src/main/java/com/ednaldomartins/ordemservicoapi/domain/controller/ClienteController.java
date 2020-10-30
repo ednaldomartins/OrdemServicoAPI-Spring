@@ -1,4 +1,4 @@
-package com.ednaldomartins.ordemservicoapi.controller;
+package com.ednaldomartins.ordemservicoapi.domain.controller;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,8 +21,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ednaldomartins.ordemservicoapi.domain.model.Cliente;
-import com.ednaldomartins.ordemservicoapi.domain.repository.ClienteRepository;
-import com.ednaldomartins.ordemservicoapi.domain.service.CrudCliente;
+import com.ednaldomartins.ordemservicoapi.data.repository.ClienteRepository;
+import com.ednaldomartins.ordemservicoapi.data.service.CrudCliente;
 
 @RestController
 @RequestMapping("/clientes")

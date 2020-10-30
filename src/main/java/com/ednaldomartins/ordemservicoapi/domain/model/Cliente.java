@@ -10,7 +10,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.ednaldomartins.ordemservicoapi.domain.ValidationGroups;
+import com.ednaldomartins.ordemservicoapi.util.ValidationGroups;
 
 @Entity
 public class Cliente {

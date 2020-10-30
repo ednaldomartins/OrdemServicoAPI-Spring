@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
 
-import com.ednaldomartins.ordemservicoapi.domain.ValidationGroups;
+import com.ednaldomartins.ordemservicoapi.util.ValidationGroups;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
