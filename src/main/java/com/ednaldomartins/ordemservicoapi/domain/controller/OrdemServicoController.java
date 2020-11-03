@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ednaldomartins.ordemservicoapi.domain.model.OrdemServico;
+import com.ednaldomartins.ordemservicoapi.presentation.model.OrdemServicoInput;
 import com.ednaldomartins.ordemservicoapi.presentation.model.OrdemServicoPresentation;
 import com.ednaldomartins.ordemservicoapi.data.repository.OrdemServicoRepository;
 import com.ednaldomartins.ordemservicoapi.data.service.CrudOrdemServico;
@@ -38,7 +39,8 @@ public class OrdemServicoController {
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public OrdemServicoPresentation criar(@Valid @RequestBody OrdemServico ordemServico) {
+	public OrdemServicoPresentation criar(@Valid @RequestBody OrdemServicoInput ordemServicoInput) {
+		OrdemServico ordemServico = toEntity(ordemServicoInput);
 		return toPresentation(crudOrdemServico.criar(ordemServico));
 	}
 	
@@ -57,6 +59,10 @@ public class OrdemServicoController {
 		}
 		
 		return ResponseEntity.notFound().build();
+	}
+	
+	private OrdemServico toEntity(OrdemServicoInput ordemServicoInput) {
+		return modelMapper.map(ordemServicoInput, OrdemServico.class);
 	}
 	
 	private OrdemServicoPresentation toPresentation(OrdemServico ordemServico) {
