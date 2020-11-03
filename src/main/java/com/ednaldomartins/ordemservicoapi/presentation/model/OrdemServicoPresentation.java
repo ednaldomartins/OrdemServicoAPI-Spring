@@ -8,7 +8,7 @@ import com.ednaldomartins.ordemservicoapi.domain.model.StatusOrdemServico;
 public class OrdemServicoPresentation {
 
 	private Long id;
-	private String nomeCliente;
+	private ClienteNomePresentation cliente;
 	private String descricao;
 	private BigDecimal preco;
 	private StatusOrdemServico statusOrdemServico;
@@ -23,14 +23,14 @@ public class OrdemServicoPresentation {
 		this.id = id;
 	}
 	
-	public String getNomeCliente() {
-		return nomeCliente;
+	public ClienteNomePresentation getCliente() {
+		return cliente;
 	}
-	
-	public void setNomeCliente(String nomeCliente) {
-		this.nomeCliente = nomeCliente;
+
+	public void setCliente(ClienteNomePresentation cliente) {
+		this.cliente = cliente;
 	}
-	
+
 	public String getDescricao() {
 		return descricao;
 	}
