@@ -2,6 +2,7 @@ package com.ednaldomartins.ordemservicoapi.domain.controller;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -37,13 +38,13 @@ public class OrdemServicoController {
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public OrdemServico criar(@Valid @RequestBody OrdemServico ordemServico) {
-		return crudOrdemServico.criar(ordemServico);
+	public OrdemServicoPresentation criar(@Valid @RequestBody OrdemServico ordemServico) {
+		return toPresentation(crudOrdemServico.criar(ordemServico));
 	}
 	
 	@GetMapping
-	public List<OrdemServico> listar() {
-		return OrdemServicoRepository.findAll();
+	public List<OrdemServicoPresentation> listar() {
+		return toPresentationList(OrdemServicoRepository.findAll());
 	}
 	
 	@GetMapping("/{ordemServicoId}")
@@ -51,12 +52,22 @@ public class OrdemServicoController {
 		Optional<OrdemServico> ordemservico = OrdemServicoRepository.findById(ordemServicoId);
 		
 		if (ordemservico.isPresent()) {
-			OrdemServicoPresentation presentationModel = 
-				modelMapper.map(ordemservico.get(), OrdemServicoPresentation.class);
-					
+			OrdemServicoPresentation presentationModel = toPresentation(ordemservico.get());		
 			return ResponseEntity.ok(presentationModel);
 		}
 		
 		return ResponseEntity.notFound().build();
+	}
+	
+	private OrdemServicoPresentation toPresentation(OrdemServico ordemServico) {
+		return modelMapper.map(ordemServico, OrdemServicoPresentation.class);
+	}
+	
+	private List<OrdemServicoPresentation> toPresentationList(List<OrdemServico> ordemServico) {
+		
+		return ordemServico
+				.stream()
+				.map(os -> toPresentation(os))
+				.collect(Collectors.toList());
 	}
 }
