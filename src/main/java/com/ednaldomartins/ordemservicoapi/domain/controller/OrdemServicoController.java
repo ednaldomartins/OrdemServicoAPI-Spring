@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ednaldomartins.ordemservicoapi.domain.model.OrdemServico;
+import com.ednaldomartins.ordemservicoapi.presentation.model.OrdemServicoPresentation;
 import com.ednaldomartins.ordemservicoapi.data.repository.OrdemServicoRepository;
 import com.ednaldomartins.ordemservicoapi.data.service.CrudOrdemServico;
 
@@ -30,6 +32,9 @@ public class OrdemServicoController {
 	@Autowired
 	private OrdemServicoRepository OrdemServicoRepository;
 	
+	@Autowired
+	private ModelMapper modelMapper;
+	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public OrdemServico criar(@Valid @RequestBody OrdemServico ordemServico) {
@@ -42,11 +47,14 @@ public class OrdemServicoController {
 	}
 	
 	@GetMapping("/{ordemServicoId}")
-	public ResponseEntity<OrdemServico> buscar(@PathVariable Long ordemServicoId) {
+	public ResponseEntity<OrdemServicoPresentation> buscar(@PathVariable Long ordemServicoId) {
 		Optional<OrdemServico> ordemservico = OrdemServicoRepository.findById(ordemServicoId);
 		
 		if (ordemservico.isPresent()) {
-			return ResponseEntity.ok(ordemservico.get());
+			OrdemServicoPresentation presentationModel = 
+				modelMapper.map(ordemservico.get(), OrdemServicoPresentation.class);
+					
+			return ResponseEntity.ok(presentationModel);
 		}
 		
 		return ResponseEntity.notFound().build();
