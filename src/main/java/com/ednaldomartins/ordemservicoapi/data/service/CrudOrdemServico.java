@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.ednaldomartins.ordemservicoapi.data.repository.ClienteRepository;
 import com.ednaldomartins.ordemservicoapi.data.repository.ComentarioRepository;
 import com.ednaldomartins.ordemservicoapi.data.repository.OrdemServicoRepository;
+import com.ednaldomartins.ordemservicoapi.domain.exception.EntidadeNaoEncontradaException;
 import com.ednaldomartins.ordemservicoapi.domain.exception.NegocioException;
 import com.ednaldomartins.ordemservicoapi.domain.model.Cliente;
 import com.ednaldomartins.ordemservicoapi.domain.model.Comentario;
@@ -40,7 +41,7 @@ public class CrudOrdemServico {
 	
 	public Comentario adicionarComentario(Long ordemServicoId, String descricao) {
 		OrdemServico ordemServico = ordemServicoRepository.findById(ordemServicoId)
-				.orElseThrow(() -> new NegocioException("Ordem de serviço não encontrada"));
+				.orElseThrow(() -> new EntidadeNaoEncontradaException("Ordem de serviço não encontrada"));
 		
 		Comentario comentario = new Comentario(
 				ordemServico,
