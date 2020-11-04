@@ -23,19 +23,16 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 	
 	@ExceptionHandler(NegocioException.class)
 	public ResponseEntity<Object> handleNegocio(NegocioException exception, WebRequest request) {
-		HttpStatus status = HttpStatus.BAD_REQUEST;
-		ApiResponseError apiResponseError = new ApiResponseError(
-				status.value(),
-				OffsetDateTime.now(),
-				exception.getMessage()
-				);
-		
-		return handleExceptionInternal(exception, apiResponseError, new HttpHeaders(), status, request);
+		return handleException(exception, request, HttpStatus.BAD_REQUEST);
 	}
 	
 	@ExceptionHandler(EntidadeNaoEncontradaException.class)
 	public ResponseEntity<Object> handleEntidadeNaoEncontradaException(NegocioException exception, WebRequest request) {
-		HttpStatus status = HttpStatus.NOT_FOUND;
+		return handleException(exception, request, HttpStatus.NOT_FOUND);
+	}
+	
+	@ExceptionHandler(RuntimeException.class)
+	public ResponseEntity<Object> handleException(NegocioException exception, WebRequest request, HttpStatus status) {
 		ApiResponseError apiResponseError = new ApiResponseError(
 				status.value(),
 				OffsetDateTime.now(),
