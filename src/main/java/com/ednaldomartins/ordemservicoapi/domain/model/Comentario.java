@@ -20,6 +20,8 @@ public class Comentario {
 	private String descricao;
 	private OffsetDateTime dataEnvio;
 	
+	public Comentario() {}
+	
 	public Comentario(OrdemServico ordemServico, String descricao, OffsetDateTime dataEnvio) {
 		super();
 		this.ordemServico = ordemServico;

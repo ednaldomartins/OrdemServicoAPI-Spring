@@ -1,10 +1,14 @@
 package com.ednaldomartins.ordemservicoapi.domain.controller;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,8 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ednaldomartins.ordemservicoapi.data.repository.OrdemServicoRepository;
 import com.ednaldomartins.ordemservicoapi.data.service.CrudOrdemServico;
+import com.ednaldomartins.ordemservicoapi.domain.exception.EntidadeNaoEncontradaException;
 import com.ednaldomartins.ordemservicoapi.domain.model.Comentario;
+import com.ednaldomartins.ordemservicoapi.domain.model.OrdemServico;
 import com.ednaldomartins.ordemservicoapi.presentation.model.ComentarioInput;
 import com.ednaldomartins.ordemservicoapi.presentation.model.ComentarioPresentation;
 
@@ -25,8 +32,19 @@ public class ComentarioController {
 	private CrudOrdemServico crudOrdemServico;
 	
 	@Autowired
+	private OrdemServicoRepository ordemServicoRepository;
+	
+	@Autowired
 	private ModelMapper modelMapper;
 	
+	@GetMapping
+	public List<ComentarioPresentation> listar(@PathVariable Long ordemServicoId) {
+		OrdemServico ordemServico = ordemServicoRepository.findById(ordemServicoId)
+				.orElseThrow(() -> new EntidadeNaoEncontradaException("Ordem de serviço não encontrada"));
+		
+		return toPresentationList(ordemServico.getComentarios());
+	}
+
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public ComentarioPresentation adicionar(
@@ -44,4 +62,12 @@ public class ComentarioController {
 	private ComentarioPresentation toPresentation(Comentario comentario) {
 		return modelMapper.map(comentario, ComentarioPresentation.class);
 	}
+	
+	private List<ComentarioPresentation> toPresentationList(List<Comentario> comentarios) {
+		return comentarios
+				.stream()
+				.map(comentario -> toPresentation(comentario))
+				.collect(Collectors.toList());
+	}
+	
 }
