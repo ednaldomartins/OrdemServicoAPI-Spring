@@ -14,6 +14,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.ednaldomartins.ordemservicoapi.domain.exception.NegocioException;
+
 @Entity
 public class OrdemServico {
 	
@@ -122,6 +124,15 @@ public class OrdemServico {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+	public void finalizar() {
+		if(!this.getStatus().equals(StatusOrdemServico.ABERTA)) {
+			throw new NegocioException("Ordem de serviço não pode ser finalizada, pois ela não está mais aberta.");
+		}
+		
+		setStatus(StatusOrdemServico.FINALIZADA);
+		setDataFinalizacao(OffsetDateTime.now());
 	}
 
 }
