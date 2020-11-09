@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ednaldomartins.ordemservicoapi.domain.model.OrdemServico;
 import com.ednaldomartins.ordemservicoapi.presentation.model.OrdemServicoInput;
 import com.ednaldomartins.ordemservicoapi.presentation.model.OrdemServicoPresentation;
-import com.ednaldomartins.ordemservicoapi.data.repository.OrdemServicoRepository;
 import com.ednaldomartins.ordemservicoapi.data.service.CrudOrdemServico;
 
 @RestController
@@ -31,9 +30,6 @@ public class OrdemServicoController {
 
 	@Autowired
 	private CrudOrdemServico crudOrdemServico;
-	
-	@Autowired
-	private OrdemServicoRepository OrdemServicoRepository;
 	
 	@Autowired
 	private ModelMapper modelMapper;
@@ -46,16 +42,17 @@ public class OrdemServicoController {
 	}
 	
 	@GetMapping
-	public List<OrdemServicoPresentation> listar() {
-		return toPresentationList(OrdemServicoRepository.findAll());
+	public List<OrdemServicoPresentation> listarOrdensServico() {
+		return toPresentationList(crudOrdemServico.listar());
 	}
 	
 	@GetMapping("/{ordemServicoId}")
 	public ResponseEntity<OrdemServicoPresentation> buscar(@PathVariable Long ordemServicoId) {
-		Optional<OrdemServico> ordemservico = OrdemServicoRepository.findById(ordemServicoId);
+		Optional<OrdemServico> ordemServico = 
+				Optional.ofNullable(crudOrdemServico.buscar(ordemServicoId));
 		
-		if (ordemservico.isPresent()) {
-			OrdemServicoPresentation presentationModel = toPresentation(ordemservico.get());		
+		if (ordemServico.isPresent()) {
+			OrdemServicoPresentation presentationModel = toPresentation(ordemServico.get());		
 			return ResponseEntity.ok(presentationModel);
 		}
 		
@@ -76,8 +73,7 @@ public class OrdemServicoController {
 		return modelMapper.map(ordemServico, OrdemServicoPresentation.class);
 	}
 	
-	private List<OrdemServicoPresentation> toPresentationList(List<OrdemServico> ordemServico) {
-		
+	private List<OrdemServicoPresentation> toPresentationList(List<OrdemServico> ordemServico) {	
 		return ordemServico
 				.stream()
 				.map(os -> toPresentation(os))

@@ -1,6 +1,7 @@
 package com.ednaldomartins.ordemservicoapi.data.service;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,15 @@ public class CrudOrdemServico {
 	
 	@Autowired
 	private ComentarioRepository comentarioRepository;
+	
+	public List<OrdemServico> listar() {
+		return ordemServicoRepository.findAll();
+	}
+
+	public OrdemServico buscar(Long ordemServicoId) {
+		return ordemServicoRepository.findById(ordemServicoId)
+				.orElseThrow(() -> new EntidadeNaoEncontradaException("Ordem de serviço não encontrada"));
+	}
 	
 	public OrdemServico criar(OrdemServico ordemServico) {
 		Cliente cliente = clienteRepository.findById(
@@ -58,8 +68,4 @@ public class CrudOrdemServico {
 		return comentarioRepository.save(comentario);
 	}
 
-	private OrdemServico buscar(Long ordemServicoId) {
-		return ordemServicoRepository.findById(ordemServicoId)
-				.orElseThrow(() -> new EntidadeNaoEncontradaException("Ordem de serviço não encontrada"));
-	}
 }

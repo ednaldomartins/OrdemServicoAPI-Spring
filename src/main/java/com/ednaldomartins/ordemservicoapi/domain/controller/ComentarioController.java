@@ -1,6 +1,7 @@
 package com.ednaldomartins.ordemservicoapi.domain.controller;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -16,9 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ednaldomartins.ordemservicoapi.data.repository.OrdemServicoRepository;
 import com.ednaldomartins.ordemservicoapi.data.service.CrudOrdemServico;
-import com.ednaldomartins.ordemservicoapi.domain.exception.EntidadeNaoEncontradaException;
 import com.ednaldomartins.ordemservicoapi.domain.model.Comentario;
 import com.ednaldomartins.ordemservicoapi.domain.model.OrdemServico;
 import com.ednaldomartins.ordemservicoapi.presentation.model.ComentarioInput;
@@ -32,17 +31,13 @@ public class ComentarioController {
 	private CrudOrdemServico crudOrdemServico;
 	
 	@Autowired
-	private OrdemServicoRepository ordemServicoRepository;
-	
-	@Autowired
 	private ModelMapper modelMapper;
 	
 	@GetMapping
 	public List<ComentarioPresentation> listar(@PathVariable Long ordemServicoId) {
-		OrdemServico ordemServico = ordemServicoRepository.findById(ordemServicoId)
-				.orElseThrow(() -> new EntidadeNaoEncontradaException("Ordem de serviço não encontrada"));
+		Optional<OrdemServico> ordemServico = Optional.ofNullable(crudOrdemServico.buscar(ordemServicoId));
 		
-		return toPresentationList(ordemServico.getComentarios());
+		return toPresentationList(ordemServico.get().getComentarios());
 	}
 
 	@PostMapping
