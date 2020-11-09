@@ -1,14 +1,15 @@
 package com.ednaldomartins.ordemservicoapi.domain.controller;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,8 +18,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.ednaldomartins.ordemservicoapi.domain.model.Cliente;
 import com.ednaldomartins.ordemservicoapi.data.service.CrudCliente;
@@ -48,9 +49,20 @@ public class ClienteController {
 	}
 	
 	@PostMapping
-	@ResponseStatus(HttpStatus.CREATED)
-	public Cliente adicionar(@Valid @RequestBody Cliente cliente) {
-		return crudCliente.salvar(cliente);
+	public ResponseEntity<Cliente> adicionar(
+			@Valid @RequestBody Cliente cliente,
+			HttpServletResponse response
+			) {
+		Cliente clienteAdicionado = crudCliente.salvar(cliente);
+		
+		// retorno do header
+		URI uri = ServletUriComponentsBuilder
+				.fromCurrentRequestUri()
+				.path("/{clienteId}")
+				.buildAndExpand(clienteAdicionado.getId())
+				.toUri();
+		
+		return ResponseEntity.created(uri).body(clienteAdicionado);
 	}
 	
 	@PutMapping("/{clienteId}")
