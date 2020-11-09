@@ -1,5 +1,8 @@
 package com.ednaldomartins.ordemservicoapi.data.service;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +15,18 @@ public class CrudCliente {
 
 	@Autowired
 	private ClienteRepository clienteRepository;
+	
+	public List<Cliente> listar() {
+		return clienteRepository.findAll();
+	}
+	
+	public Optional<Cliente> buscar(Long clienteId) {
+		return clienteRepository.findById(clienteId);
+	}
+	
+	public boolean existe(Long clienteId) {
+		return clienteRepository.existsById(clienteId);
+	}
 	
 	public Cliente salvar(Cliente cliente) {
 		Cliente clienteEncontrado = clienteRepository.findByEmail(cliente.getEmail());

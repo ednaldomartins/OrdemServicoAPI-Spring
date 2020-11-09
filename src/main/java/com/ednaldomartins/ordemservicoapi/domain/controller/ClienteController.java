@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ednaldomartins.ordemservicoapi.domain.model.Cliente;
-import com.ednaldomartins.ordemservicoapi.data.repository.ClienteRepository;
 import com.ednaldomartins.ordemservicoapi.data.service.CrudCliente;
 
 @RestController
@@ -32,25 +31,20 @@ public class ClienteController {
 	private EntityManager manager;
 	
 	@Autowired
-	private ClienteRepository clienteRepository;
-	
-	@Autowired
 	private CrudCliente crudCliente;
 	
-	@GetMapping()
-	public List<Cliente> Listar() {
-		return clienteRepository.findAll();
+	@GetMapping
+	public List<Cliente> listarClientes() {
+		return crudCliente.listar();
 	}
 	
 	@GetMapping("/{clienteId}")
-	public ResponseEntity<Cliente> buscar(@PathVariable Long clienteId) {
-		Optional<Cliente> cliente = clienteRepository.findById(clienteId);
+	public ResponseEntity<Cliente> buscarCliente(@PathVariable Long clienteId) {
+		Optional<Cliente> cliente = crudCliente.buscar(clienteId);
 		
-		if(cliente.isPresent()) {
-			return ResponseEntity.ok(cliente.get());
-		}
-		
-		return ResponseEntity.notFound().build();
+		return cliente.isPresent()
+				? ResponseEntity.ok(cliente.get())
+				: ResponseEntity.notFound().build();
 	}
 	
 	@PostMapping
@@ -65,7 +59,7 @@ public class ClienteController {
 			@Valid @RequestBody Cliente cliente
 			) {
 		
-		if (!clienteRepository.existsById(clienteId)) {
+		if (!crudCliente.existe(clienteId)) {
 			return ResponseEntity.notFound().build();
 		}
 		
@@ -77,7 +71,7 @@ public class ClienteController {
 	
 	@DeleteMapping("/{clienteId}")
 	public ResponseEntity<Void> excluir(@PathVariable Long clienteId) {
-		if (!clienteRepository.existsById(clienteId)) {
+		if (!crudCliente.existe(clienteId)) {
 			return ResponseEntity.notFound().build();
 		}
 		
