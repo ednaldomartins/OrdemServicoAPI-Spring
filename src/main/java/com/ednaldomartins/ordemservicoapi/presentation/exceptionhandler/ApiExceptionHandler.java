@@ -1,4 +1,4 @@
-package com.ednaldomartins.ordemservicoapi.util.exceptionhandler;
+package com.ednaldomartins.ordemservicoapi.presentation.exceptionhandler;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;

@@ -37,7 +37,7 @@ public class OrdemServicoController {
 	private ModelMapper modelMapper;
 	
 	@PostMapping
-	public  ResponseEntity<OrdemServicoPresentation> criar(@Valid @RequestBody OrdemServicoInput ordemServicoInput) {
+	public  ResponseEntity<OrdemServicoPresentation> criarOrdemServico(@Valid @RequestBody OrdemServicoInput ordemServicoInput) {
 		OrdemServico ordemServico = toEntity(ordemServicoInput);
 		OrdemServicoPresentation ordemServicoCriada =
 				toPresentation(crudOrdemServico.criar(ordemServico));
@@ -58,7 +58,7 @@ public class OrdemServicoController {
 	}
 	
 	@GetMapping("/{ordemServicoId}")
-	public ResponseEntity<OrdemServicoPresentation> buscar(@PathVariable Long ordemServicoId) {
+	public ResponseEntity<OrdemServicoPresentation> buscarOrdemServico(@PathVariable Long ordemServicoId) {
 		Optional<OrdemServico> ordemServico = 
 				Optional.ofNullable(crudOrdemServico.buscar(ordemServicoId));
 		
@@ -72,7 +72,7 @@ public class OrdemServicoController {
 	
 	@PutMapping("/{ordemServicoId}/finalizacao")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void finalizacao(@PathVariable Long ordemServicoId) {
+	public void finalizarOrdemServico(@PathVariable Long ordemServicoId) {
 		crudOrdemServico.finalizar(ordemServicoId);
 	}
 	

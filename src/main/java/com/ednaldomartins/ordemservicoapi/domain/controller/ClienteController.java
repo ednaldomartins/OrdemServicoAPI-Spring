@@ -53,7 +53,7 @@ public class ClienteController {
 			@Valid @RequestBody Cliente cliente,
 			HttpServletResponse response
 			) {
-		Cliente clienteAdicionado = crudCliente.salvar(cliente);
+		Cliente clienteAdicionado = crudCliente.criar(cliente);
 		
 		// retorno do header
 		URI uri = ServletUriComponentsBuilder
@@ -76,7 +76,7 @@ public class ClienteController {
 		}
 		
 		cliente.setId(clienteId);
-		cliente = crudCliente.salvar(cliente);
+		cliente = crudCliente.criar(cliente);
 		
 		return ResponseEntity.ok(cliente);
 	}

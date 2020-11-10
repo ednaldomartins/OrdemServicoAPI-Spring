@@ -28,7 +28,7 @@ public class CrudCliente {
 		return clienteRepository.existsById(clienteId);
 	}
 	
-	public Cliente salvar(Cliente cliente) {
+	public Cliente criar(Cliente cliente) {
 		Cliente clienteEncontrado = clienteRepository.findByEmail(cliente.getEmail());
 		
 		if(clienteEncontrado != null && !clienteEncontrado.equals(cliente)) {
