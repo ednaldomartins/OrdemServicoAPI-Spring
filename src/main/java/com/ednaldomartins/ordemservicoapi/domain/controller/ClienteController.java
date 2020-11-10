@@ -1,6 +1,5 @@
 package com.ednaldomartins.ordemservicoapi.domain.controller;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,6 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,10 +20,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.ednaldomartins.ordemservicoapi.domain.model.Cliente;
 import com.ednaldomartins.ordemservicoapi.data.service.CrudCliente;
+import com.ednaldomartins.ordemservicoapi.domain.event.EntidadeCriadaEvent;
+import com.ednaldomartins.ordemservicoapi.domain.model.Cliente;
 
 @RestController
 @RequestMapping("/clientes")
@@ -33,6 +34,9 @@ public class ClienteController {
 	
 	@Autowired
 	private CrudCliente crudCliente;
+	
+	@Autowired
+	private ApplicationEventPublisher publisher;
 	
 	@GetMapping
 	public List<Cliente> listarClientes() {
@@ -53,16 +57,10 @@ public class ClienteController {
 			@Valid @RequestBody Cliente cliente,
 			HttpServletResponse response
 			) {
-		Cliente clienteAdicionado = crudCliente.criar(cliente);
+		Cliente clienteCriado = crudCliente.criar(cliente);
 		
-		// retorno do header
-		URI uri = ServletUriComponentsBuilder
-				.fromCurrentRequestUri()
-				.path("/{clienteId}")
-				.buildAndExpand(clienteAdicionado.getId())
-				.toUri();
-		
-		return ResponseEntity.created(uri).body(clienteAdicionado);
+		publisher.publishEvent(new EntidadeCriadaEvent(this, response, clienteCriado.getId()));
+		return ResponseEntity.status(HttpStatus.CREATED).body(clienteCriado);
 	}
 	
 	@PutMapping("/{clienteId}")
