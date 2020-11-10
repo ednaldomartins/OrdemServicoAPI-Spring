@@ -11,6 +11,7 @@ import com.ednaldomartins.ordemservicoapi.data.repository.ComentarioRepository;
 import com.ednaldomartins.ordemservicoapi.data.repository.OrdemServicoRepository;
 import com.ednaldomartins.ordemservicoapi.domain.exception.EntidadeNaoEncontradaException;
 import com.ednaldomartins.ordemservicoapi.domain.exception.NegocioException;
+import com.ednaldomartins.ordemservicoapi.domain.exception.OrdemServicoNaoAbertaException;
 import com.ednaldomartins.ordemservicoapi.domain.model.Cliente;
 import com.ednaldomartins.ordemservicoapi.domain.model.Comentario;
 import com.ednaldomartins.ordemservicoapi.domain.model.OrdemServico;
@@ -65,6 +66,10 @@ public class CrudOrdemServico {
 	
 	public Comentario adicionarComentario(Long ordemServicoId, String descricao) {
 		OrdemServico ordemServico = buscar(ordemServicoId);
+		
+		if (ordemServico.finalizadaOuCancelada()) {
+			throw new OrdemServicoNaoAbertaException("O comentário não pode ser adicionado a uma ordem de serviço cancelada ou finalizada.");
+		}
 		
 		Comentario comentario = new Comentario(
 				ordemServico,

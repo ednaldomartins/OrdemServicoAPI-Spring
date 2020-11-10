@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import com.ednaldomartins.ordemservicoapi.domain.exception.EntidadeNaoEncontradaException;
 import com.ednaldomartins.ordemservicoapi.domain.exception.NegocioException;
+import com.ednaldomartins.ordemservicoapi.domain.exception.OrdemServicoNaoAbertaException;
 
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
@@ -29,6 +30,14 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 	@ExceptionHandler(EntidadeNaoEncontradaException.class)
 	public ResponseEntity<Object> handleEntidadeNaoEncontradaException(NegocioException exception, WebRequest request) {
 		return handleException(exception, request, HttpStatus.NOT_FOUND);
+	}
+	
+	@ExceptionHandler(OrdemServicoNaoAbertaException.class)
+	public ResponseEntity<Object> handlerOrdemServicoNaoAbertaException(
+			OrdemServicoNaoAbertaException exception, 
+			WebRequest request
+			) {
+		return handleException(exception, request, HttpStatus.BAD_REQUEST);
 	}
 	
 	@ExceptionHandler(RuntimeException.class)

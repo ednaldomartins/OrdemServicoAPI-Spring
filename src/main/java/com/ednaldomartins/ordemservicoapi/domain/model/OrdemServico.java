@@ -125,6 +125,10 @@ public class OrdemServico {
 			return false;
 		return true;
 	}
+	
+	public boolean finalizadaOuCancelada() {
+		return !this.getStatus().equals(StatusOrdemServico.ABERTA);
+	}
 
 	public void finalizar() {
 		alterarStatus(StatusOrdemServico.FINALIZADA);
@@ -135,7 +139,7 @@ public class OrdemServico {
 	}
 	
 	private void alterarStatus(StatusOrdemServico status) {
-		if(!this.getStatus().equals(StatusOrdemServico.ABERTA)) {
+		if(this.finalizadaOuCancelada()) {
 			throw new NegocioException("Ordem de serviço não pode ser cancelada, pois ela não está mais em aberto.");
 		}
 
