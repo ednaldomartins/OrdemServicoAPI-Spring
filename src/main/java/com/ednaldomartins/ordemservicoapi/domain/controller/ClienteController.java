@@ -49,7 +49,7 @@ public class ClienteController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Cliente> adicionar(
+	public ResponseEntity<Cliente> criarCliente(
 			@Valid @RequestBody Cliente cliente,
 			HttpServletResponse response
 			) {
@@ -66,29 +66,17 @@ public class ClienteController {
 	}
 	
 	@PutMapping("/{clienteId}")
-	public ResponseEntity<Cliente> atualizar(
+	public ResponseEntity<Cliente> atualizarCliente(
 			@PathVariable Long clienteId, 
 			@Valid @RequestBody Cliente cliente
 			) {
 		
-		if (!crudCliente.existe(clienteId)) {
-			return ResponseEntity.notFound().build();
-		}
-		
-		cliente.setId(clienteId);
-		cliente = crudCliente.criar(cliente);
-		
-		return ResponseEntity.ok(cliente);
+		return crudCliente.atualizar(clienteId, cliente);
 	}
 	
 	@DeleteMapping("/{clienteId}")
-	public ResponseEntity<Void> excluir(@PathVariable Long clienteId) {
-		if (!crudCliente.existe(clienteId)) {
-			return ResponseEntity.notFound().build();
-		}
-		
-		crudCliente.excluir(clienteId);
-		
-		return ResponseEntity.noContent().build();
+	public ResponseEntity<Void> excluirCliente(@PathVariable Long clienteId) {
+		return crudCliente.excluir(clienteId);
 	}
+
 }

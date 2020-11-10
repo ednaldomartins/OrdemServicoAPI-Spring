@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.ednaldomartins.ordemservicoapi.data.repository.ClienteRepository;
@@ -37,8 +38,25 @@ public class CrudCliente {
 		
 		return clienteRepository.save(cliente);
 	}
-	
-	public void excluir(Long clientId) {
-		clienteRepository.deleteById(clientId);
+
+	public ResponseEntity<Void> excluir(Long clienteId) {
+		if (!existe(clienteId)) {
+			return ResponseEntity.notFound().build();
+		}
+
+		clienteRepository.deleteById(clienteId);
+		
+		return ResponseEntity.noContent().build();
+	}
+
+	public ResponseEntity<Cliente> atualizar(Long clienteId, Cliente cliente) {
+		if (!existe(clienteId)) {
+			return ResponseEntity.notFound().build();
+		}
+		
+		cliente.setId(clienteId);
+		cliente = criar(cliente);
+		
+		return ResponseEntity.ok(cliente);
 	}
 }
