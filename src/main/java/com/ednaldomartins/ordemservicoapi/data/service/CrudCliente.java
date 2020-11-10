@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.ednaldomartins.ordemservicoapi.data.repository.ClienteRepository;
+import com.ednaldomartins.ordemservicoapi.domain.exception.EntidadeNaoEncontradaException;
 import com.ednaldomartins.ordemservicoapi.domain.exception.NegocioException;
 import com.ednaldomartins.ordemservicoapi.domain.model.Cliente;
 
@@ -41,7 +42,7 @@ public class CrudCliente {
 
 	public ResponseEntity<Void> excluir(Long clienteId) {
 		if (!existe(clienteId)) {
-			return ResponseEntity.notFound().build();
+			throw new EntidadeNaoEncontradaException("O cliente com ID = " + clienteId + " não foi encontrado.");
 		}
 
 		clienteRepository.deleteById(clienteId);
@@ -51,7 +52,7 @@ public class CrudCliente {
 
 	public ResponseEntity<Cliente> atualizar(Long clienteId, Cliente cliente) {
 		if (!existe(clienteId)) {
-			return ResponseEntity.notFound().build();
+			throw new EntidadeNaoEncontradaException("O cliente com ID = " + clienteId + " não foi encontrado.");
 		}
 		
 		cliente.setId(clienteId);

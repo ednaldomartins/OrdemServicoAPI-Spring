@@ -73,10 +73,16 @@ public class OrdemServicoController {
 		return ResponseEntity.notFound().build();
 	}
 	
-	@PutMapping("/{ordemServicoId}/finalizacao")
+	@PutMapping("/{ordemServicoId}/finalizar")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void finalizarOrdemServico(@PathVariable Long ordemServicoId) {
 		crudOrdemServico.finalizar(ordemServicoId);
+	}
+	
+	@PutMapping("/{ordemServicoId}/cancelar")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void cancelarOrdemServico(@PathVariable Long ordemServicoId) {
+		crudOrdemServico.cancelar(ordemServicoId);
 	}
 	
 	private OrdemServico toEntity(OrdemServicoInput ordemServicoInput) {

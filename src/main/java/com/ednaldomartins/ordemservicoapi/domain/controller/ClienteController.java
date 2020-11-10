@@ -59,7 +59,9 @@ public class ClienteController {
 			) {
 		Cliente clienteCriado = crudCliente.criar(cliente);
 		
-		publisher.publishEvent(new EntidadeCriadaEvent(this, response, clienteCriado.getId()));
+		publisher.publishEvent(
+				new EntidadeCriadaEvent(this, response, clienteCriado.getId()));
+		
 		return ResponseEntity.status(HttpStatus.CREATED).body(clienteCriado);
 	}
 	

@@ -127,12 +127,20 @@ public class OrdemServico {
 	}
 
 	public void finalizar() {
+		alterarStatus(StatusOrdemServico.FINALIZADA);
+	}
+	
+	public void cancelar() {
+		alterarStatus(StatusOrdemServico.CANCELADA);
+	}
+	
+	private void alterarStatus(StatusOrdemServico status) {
 		if(!this.getStatus().equals(StatusOrdemServico.ABERTA)) {
-			throw new NegocioException("Ordem de serviço não pode ser finalizada, pois ela não está mais aberta.");
+			throw new NegocioException("Ordem de serviço não pode ser cancelada, pois ela não está mais em aberto.");
 		}
-		
-		setStatus(StatusOrdemServico.FINALIZADA);
+
 		setDataFinalizacao(OffsetDateTime.now());
+		setStatus(status);
 	}
 
 }

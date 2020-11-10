@@ -56,6 +56,13 @@ public class CrudOrdemServico {
 		ordemServicoRepository.save(ordemServico);
 	}
 	
+	public void cancelar(Long ordemServicoId) {
+		OrdemServico ordemServico = buscar(ordemServicoId);
+		ordemServico.cancelar();
+		
+		ordemServicoRepository.save(ordemServico);
+	}
+	
 	public Comentario adicionarComentario(Long ordemServicoId, String descricao) {
 		OrdemServico ordemServico = buscar(ordemServicoId);
 		
