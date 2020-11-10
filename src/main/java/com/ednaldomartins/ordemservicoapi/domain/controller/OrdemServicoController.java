@@ -1,5 +1,6 @@
 package com.ednaldomartins.ordemservicoapi.domain.controller;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.ednaldomartins.ordemservicoapi.domain.model.OrdemServico;
 import com.ednaldomartins.ordemservicoapi.presentation.model.OrdemServicoInput;
@@ -35,10 +37,19 @@ public class OrdemServicoController {
 	private ModelMapper modelMapper;
 	
 	@PostMapping
-	@ResponseStatus(HttpStatus.CREATED)
-	public OrdemServicoPresentation criar(@Valid @RequestBody OrdemServicoInput ordemServicoInput) {
+	public  ResponseEntity<OrdemServicoPresentation> criar(@Valid @RequestBody OrdemServicoInput ordemServicoInput) {
 		OrdemServico ordemServico = toEntity(ordemServicoInput);
-		return toPresentation(crudOrdemServico.criar(ordemServico));
+		OrdemServicoPresentation ordemServicoCriada =
+				toPresentation(crudOrdemServico.criar(ordemServico));
+		
+		// retorno do header
+		URI uri = ServletUriComponentsBuilder
+				.fromCurrentRequestUri()
+				.path("/{ordemServicoPresentationId}")
+				.buildAndExpand(ordemServicoCriada.getId())
+				.toUri();
+		
+		return ResponseEntity.created(uri).body(ordemServicoCriada);
 	}
 	
 	@GetMapping
