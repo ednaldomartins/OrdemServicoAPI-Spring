@@ -1,5 +1,6 @@
 package com.ednaldomartins.ordemservicoapi.domain.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ednaldomartins.ordemservicoapi.data.service.CrudOrdemServico;
 import com.ednaldomartins.ordemservicoapi.domain.event.EntidadeCriadaEvent;
 import com.ednaldomartins.ordemservicoapi.domain.model.OrdemServico;
+import com.ednaldomartins.ordemservicoapi.domain.model.StatusOrdemServico;
 import com.ednaldomartins.ordemservicoapi.presentation.model.OrdemServicoInput;
 import com.ednaldomartins.ordemservicoapi.presentation.model.OrdemServicoPresentation;
 
@@ -40,6 +42,41 @@ public class OrdemServicoController {
 	@Autowired
 	private ApplicationEventPublisher publisher;
 	
+	@GetMapping
+	public List<OrdemServicoPresentation> listarOrdensServico(
+			String nomeDoCliente,
+			BigDecimal precoMenorQue,
+			String status,
+			String dataAberturaDe
+	) {
+		if (nomeDoCliente == null) {
+			nomeDoCliente = "";
+		}
+		
+		if (precoMenorQue == null) {
+			precoMenorQue = BigDecimal.valueOf(Double.MAX_VALUE);
+		}
+		
+		StatusOrdemServico enumStatus = convertStringToEnum(status);
+
+		if (dataAberturaDe == null) {
+			dataAberturaDe = "";
+		}
+		
+		return enumStatus == null
+				? toPresentationList(crudOrdemServico.listar(
+						nomeDoCliente, 
+						precoMenorQue, 
+						dataAberturaDe
+				)) 
+				: toPresentationList(crudOrdemServico.listar(
+						nomeDoCliente, 
+						precoMenorQue, 
+						enumStatus, 
+						dataAberturaDe
+				));
+	}
+	
 	@PostMapping
 	public  ResponseEntity<OrdemServicoPresentation> criarOrdemServico(
 			@Valid @RequestBody OrdemServicoInput ordemServicoInput,
@@ -53,11 +90,6 @@ public class OrdemServicoController {
 				new EntidadeCriadaEvent(this, response, ordemServicoCriada.getId()));
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(ordemServicoCriada);
-	}
-	
-	@GetMapping
-	public List<OrdemServicoPresentation> listarOrdensServico() {
-		return toPresentationList(crudOrdemServico.listar());
 	}
 	
 	@GetMapping("/{ordemServicoId}")
@@ -98,5 +130,21 @@ public class OrdemServicoController {
 				.stream()
 				.map(os -> toPresentation(os))
 				.collect(Collectors.toList());
+	}
+	
+	private StatusOrdemServico convertStringToEnum(String status) {
+		if(status != null) {
+			if (status.toUpperCase().equals("FINALIZADA")) {
+				return StatusOrdemServico.FINALIZADA;
+			}
+			else if (status.toUpperCase().equals("CANCELADA")) {
+				return StatusOrdemServico.CANCELADA;
+			} 
+			else if (status.toUpperCase().equals("ABERTA")) {
+				return StatusOrdemServico.ABERTA;
+			}
+		}
+			
+		return null;
 	}
 }

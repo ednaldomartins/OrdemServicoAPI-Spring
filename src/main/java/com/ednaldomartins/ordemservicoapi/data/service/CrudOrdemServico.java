@@ -1,5 +1,6 @@
 package com.ednaldomartins.ordemservicoapi.data.service;
 
+import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.List;
 
@@ -29,8 +30,31 @@ public class CrudOrdemServico {
 	@Autowired
 	private ComentarioRepository comentarioRepository;
 	
-	public List<OrdemServico> listar() {
-		return ordemServicoRepository.findAll();
+	public List<OrdemServico> listar(
+			String nomeDoCliente,
+			BigDecimal precoMenorQue, 
+			StatusOrdemServico status, 
+			String dataAberturaDe
+	) {
+		return ordemServicoRepository
+				.findByClienteNomeContainingAndPrecoLessThanAndStatusLike(
+						nomeDoCliente,
+						precoMenorQue, 
+						status//, 
+//						dataAberturaDe
+				);
+	}
+	
+	public List<OrdemServico> listar(
+			String nomeDoCliente, 
+			BigDecimal precoMenorQue, 
+			String dataAberturaDe
+	) {
+		return ordemServicoRepository
+				.findByClienteNomeContainingAndPrecoLessThan(
+						nomeDoCliente,
+						precoMenorQue
+				);
 	}
 
 	public OrdemServico buscar(Long ordemServicoId) {
