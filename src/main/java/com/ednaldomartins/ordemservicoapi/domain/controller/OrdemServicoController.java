@@ -11,6 +11,8 @@ import javax.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,7 +49,8 @@ public class OrdemServicoController {
 			String nomeDoCliente,
 			BigDecimal precoMenorQue,
 			String status,
-			String dataAberturaDe
+			String dataAberturaDe,
+			Pageable pageable
 	) {
 		if (nomeDoCliente == null) {
 			nomeDoCliente = "";
@@ -67,13 +70,15 @@ public class OrdemServicoController {
 				? toPresentationList(crudOrdemServico.listar(
 						nomeDoCliente, 
 						precoMenorQue, 
-						dataAberturaDe
+						dataAberturaDe,
+						pageable
 				)) 
 				: toPresentationList(crudOrdemServico.listar(
 						nomeDoCliente, 
 						precoMenorQue, 
 						enumStatus, 
-						dataAberturaDe
+						dataAberturaDe,
+						pageable
 				));
 	}
 	
@@ -125,7 +130,7 @@ public class OrdemServicoController {
 		return modelMapper.map(ordemServico, OrdemServicoPresentation.class);
 	}
 	
-	private List<OrdemServicoPresentation> toPresentationList(List<OrdemServico> ordemServico) {	
+	private List<OrdemServicoPresentation> toPresentationList(Page<OrdemServico> ordemServico) {	
 		return ordemServico
 				.stream()
 				.map(os -> toPresentation(os))

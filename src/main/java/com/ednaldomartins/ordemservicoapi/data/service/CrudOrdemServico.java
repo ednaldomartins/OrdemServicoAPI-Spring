@@ -2,9 +2,10 @@ package com.ednaldomartins.ordemservicoapi.data.service;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.ednaldomartins.ordemservicoapi.data.repository.ClienteRepository;
@@ -30,30 +31,34 @@ public class CrudOrdemServico {
 	@Autowired
 	private ComentarioRepository comentarioRepository;
 	
-	public List<OrdemServico> listar(
+	public Page<OrdemServico> listar(
 			String nomeDoCliente,
 			BigDecimal precoMenorQue, 
 			StatusOrdemServico status, 
-			String dataAberturaDe
+			String dataAberturaDe,
+			Pageable pageable
 	) {
 		return ordemServicoRepository
 				.findByClienteNomeContainingAndPrecoLessThanAndStatusLike(
 						nomeDoCliente,
 						precoMenorQue, 
-						status//, 
-//						dataAberturaDe
+						status, 
+//						dataAberturaDe,
+						pageable
 				);
 	}
 	
-	public List<OrdemServico> listar(
+	public Page<OrdemServico> listar(
 			String nomeDoCliente, 
 			BigDecimal precoMenorQue, 
-			String dataAberturaDe
+			String dataAberturaDe,
+			Pageable pageable
 	) {
 		return ordemServicoRepository
 				.findByClienteNomeContainingAndPrecoLessThan(
 						nomeDoCliente,
-						precoMenorQue
+						precoMenorQue,
+						pageable
 				);
 	}
 
