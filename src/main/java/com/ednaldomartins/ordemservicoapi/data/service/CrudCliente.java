@@ -22,6 +22,10 @@ public class CrudCliente {
 		return clienteRepository.findAll();
 	}
 	
+	public List<Cliente> listar(String nome, String email, String estado) {
+		return clienteRepository.findByNomeContainingAndEmailContainingAndEnderecoEstadoContaining(nome, email, estado);
+	}
+	
 	public Optional<Cliente> buscar(Long clienteId) {
 		return clienteRepository.findById(clienteId);
 	}
@@ -60,4 +64,5 @@ public class CrudCliente {
 		
 		return ResponseEntity.ok(cliente);
 	}
+
 }

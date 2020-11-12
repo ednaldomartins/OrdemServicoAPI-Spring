@@ -10,8 +10,7 @@ import com.ednaldomartins.ordemservicoapi.domain.model.Cliente;
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente, Long>{
 
-	List<Cliente> findByNome(String nome);
-	List<Cliente> findByNomeContaining(String nome);
+	List<Cliente> findByNomeContainingAndEmailContainingAndEnderecoEstadoContaining(String nome, String email, String estado);
 	Cliente findByEmail(String email);
 	
 }

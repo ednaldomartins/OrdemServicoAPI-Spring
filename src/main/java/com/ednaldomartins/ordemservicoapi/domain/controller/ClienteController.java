@@ -38,9 +38,21 @@ public class ClienteController {
 	@Autowired
 	private ApplicationEventPublisher publisher;
 	
+	/*	exemplo de @GET filtrando apenas por nome, email e Endereco.estado	*/
 	@GetMapping
-	public List<Cliente> listarClientes() {
-		return crudCliente.listar();
+	public List<Cliente> listarClientes(String nome, String email, String estado) {
+		
+		if (nome == null) {
+			nome = "";
+		}
+		if (email == null) {
+			email = "";
+		}
+		if (estado == null) {
+			estado = "";
+		}
+		
+		return crudCliente.listar(nome, email, estado);
 	}
 	
 	@GetMapping("/{clienteId}")
