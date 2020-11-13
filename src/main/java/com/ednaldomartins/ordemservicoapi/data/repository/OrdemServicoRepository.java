@@ -27,4 +27,6 @@ public interface OrdemServicoRepository extends JpaRepository<OrdemServico, Long
 			Pageable pageable
 	);
 
+	int countByClienteId(Long clienteId);
+
 }

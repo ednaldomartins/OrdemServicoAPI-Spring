@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.ednaldomartins.ordemservicoapi.data.repository.ClienteRepository;
+import com.ednaldomartins.ordemservicoapi.data.repository.OrdemServicoRepository;
 import com.ednaldomartins.ordemservicoapi.domain.exception.EntidadeNaoEncontradaException;
 import com.ednaldomartins.ordemservicoapi.domain.exception.NegocioException;
 import com.ednaldomartins.ordemservicoapi.domain.model.Cliente;
@@ -17,6 +18,9 @@ public class CrudCliente {
 
 	@Autowired
 	private ClienteRepository clienteRepository;
+
+	@Autowired
+	private OrdemServicoRepository ordemServicoRepository;
 	
 	public List<Cliente> listar() {
 		return clienteRepository.findAll();
@@ -49,6 +53,11 @@ public class CrudCliente {
 			throw new EntidadeNaoEncontradaException("O cliente com ID = " + clienteId + " não foi encontrado.");
 		}
 
+		int count = ordemServicoRepository.countByClienteId(clienteId);
+		if (count > 0) {
+			throw new NegocioException("O cliente não pode ser excluído, pois o cliente possui uma ordem de serviço.");
+		}
+		
 		clienteRepository.deleteById(clienteId);
 		
 		return ResponseEntity.noContent().build();
