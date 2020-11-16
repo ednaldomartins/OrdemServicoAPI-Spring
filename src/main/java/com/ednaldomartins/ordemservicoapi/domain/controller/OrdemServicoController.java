@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,6 +46,7 @@ public class OrdemServicoController {
 	private ApplicationEventPublisher publisher;
 	
 	@GetMapping
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_ORDEM_SERVICO') and #oauth2.hasScope('read')")
 	public List<OrdemServicoPresentation> listarOrdensServico(
 			String nomeDoCliente,
 			BigDecimal precoMenorQue,
@@ -81,8 +83,23 @@ public class OrdemServicoController {
 						pageable
 				));
 	}
+
+	@GetMapping("/{ordemServicoId}")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_ORDEM_SERVICO') and #oauth2.hasScope('read')")
+	public ResponseEntity<OrdemServicoPresentation> buscarOrdemServico(@PathVariable Long ordemServicoId) {
+		Optional<OrdemServico> ordemServico = 
+				Optional.ofNullable(crudOrdemServico.buscar(ordemServicoId));
+		
+		if (ordemServico.isPresent()) {
+			OrdemServicoPresentation presentationModel = toPresentation(ordemServico.get());		
+			return ResponseEntity.ok(presentationModel);
+		}
+		
+		return ResponseEntity.notFound().build();
+	}
 	
 	@PostMapping
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_ORDEM_SERVICO') and #oauth2.hasScope('write')")
 	public  ResponseEntity<OrdemServicoPresentation> criarOrdemServico(
 			@Valid @RequestBody OrdemServicoInput ordemServicoInput,
 			HttpServletResponse response
@@ -97,26 +114,15 @@ public class OrdemServicoController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(ordemServicoCriada);
 	}
 	
-	@GetMapping("/{ordemServicoId}")
-	public ResponseEntity<OrdemServicoPresentation> buscarOrdemServico(@PathVariable Long ordemServicoId) {
-		Optional<OrdemServico> ordemServico = 
-				Optional.ofNullable(crudOrdemServico.buscar(ordemServicoId));
-		
-		if (ordemServico.isPresent()) {
-			OrdemServicoPresentation presentationModel = toPresentation(ordemServico.get());		
-			return ResponseEntity.ok(presentationModel);
-		}
-		
-		return ResponseEntity.notFound().build();
-	}
-	
 	@PutMapping("/{ordemServicoId}/finalizar")
+	@PreAuthorize("hasAuthority('ROLE_ALTERAR_ORDEM_SERVICO') and #oauth2.hasScope('write')")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void finalizarOrdemServico(@PathVariable Long ordemServicoId) {
 		crudOrdemServico.finalizar(ordemServicoId);
 	}
 	
 	@PutMapping("/{ordemServicoId}/cancelar")
+	@PreAuthorize("hasAuthority('ROLE_ALTERAR_ORDEM_SERVICO') and #oauth2.hasScope('write')")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void cancelarOrdemServico(@PathVariable Long ordemServicoId) {
 		crudOrdemServico.cancelar(ordemServicoId);

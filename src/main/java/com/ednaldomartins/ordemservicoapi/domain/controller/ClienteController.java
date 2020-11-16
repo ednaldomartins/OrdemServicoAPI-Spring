@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,6 +41,7 @@ public class ClienteController {
 	
 	/*	exemplo de @GET filtrando apenas por nome, email e Endereco.estado	*/
 	@GetMapping
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_CLIENTE') and #oauth2.hasScope('read')")
 	public List<Cliente> listarClientes(String nome, String email, String estado) {
 		
 		if (nome == null) {
@@ -56,6 +58,7 @@ public class ClienteController {
 	}
 	
 	@GetMapping("/{clienteId}")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_CLIENTE') and #oauth2.hasScope('read')")
 	public ResponseEntity<Cliente> buscarCliente(@PathVariable Long clienteId) {
 		Optional<Cliente> cliente = crudCliente.buscar(clienteId);
 		
@@ -65,6 +68,7 @@ public class ClienteController {
 	}
 	
 	@PostMapping
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_CLIENTE') and #oauth2.hasScope('write')")
 	public ResponseEntity<Cliente> criarCliente(
 			@Valid @RequestBody Cliente cliente,
 			HttpServletResponse response
@@ -78,6 +82,7 @@ public class ClienteController {
 	}
 	
 	@PutMapping("/{clienteId}")
+	@PreAuthorize("hasAuthority('ROLE_ALTERAR_CLIENTE') and #oauth2.hasScope('write')")
 	public ResponseEntity<Cliente> atualizarCliente(
 			@PathVariable Long clienteId, 
 			@Valid @RequestBody Cliente cliente
@@ -87,6 +92,7 @@ public class ClienteController {
 	}
 	
 	@DeleteMapping("/{clienteId}")
+	@PreAuthorize("hasAuthority('ROLE_REMOVER_CLIENTE') and #oauth2.hasScope('write')")
 	public ResponseEntity<Void> excluirCliente(@PathVariable Long clienteId) {
 		return crudCliente.excluir(clienteId);
 	}

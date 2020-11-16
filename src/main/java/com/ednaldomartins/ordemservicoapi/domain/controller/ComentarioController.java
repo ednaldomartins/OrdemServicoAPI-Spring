@@ -9,6 +9,7 @@ import javax.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,6 +35,7 @@ public class ComentarioController {
 	private ModelMapper modelMapper;
 	
 	@GetMapping
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_COMENTARIO') and #oauth2.hasScope('read')")
 	public List<ComentarioPresentation> listar(@PathVariable Long ordemServicoId) {
 		Optional<OrdemServico> ordemServico = Optional.ofNullable(crudOrdemServico.buscar(ordemServicoId));
 		
@@ -41,6 +43,7 @@ public class ComentarioController {
 	}
 
 	@PostMapping
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_COMENTARIO') and #oauth2.hasScope('write')")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ComentarioPresentation adicionar(
 			@PathVariable Long ordemServicoId,
