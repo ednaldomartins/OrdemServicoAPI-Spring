@@ -1,4 +1,4 @@
-package com.ednaldomartins.ordemservicoapi.util.config;
+package com.ednaldomartins.ordemservicoapi.domain.server.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

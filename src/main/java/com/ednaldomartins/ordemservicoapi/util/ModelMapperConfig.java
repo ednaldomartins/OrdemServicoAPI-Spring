@@ -1,4 +1,4 @@
-package com.ednaldomartins.ordemservicoapi.util.config;
+package com.ednaldomartins.ordemservicoapi.util;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;

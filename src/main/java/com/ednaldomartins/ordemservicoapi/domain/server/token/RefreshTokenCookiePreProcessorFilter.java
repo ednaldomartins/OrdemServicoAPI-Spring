@@ -1,4 +1,4 @@
-package com.ednaldomartins.ordemservicoapi.domain.token;
+package com.ednaldomartins.ordemservicoapi.domain.server.token;
 
 import java.io.IOException;
 import java.util.Map;
