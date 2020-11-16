@@ -25,7 +25,7 @@ public class Usuario {
 	@JoinTable(
 			name = "usuario_permissao", 
 			joinColumns = @JoinColumn(name = "id_usuario"),
-			inverseJoinColumns = @JoinColumn(name = "id_permissoes")
+			inverseJoinColumns = @JoinColumn(name = "id_permissao")
 			)
 	private List<Permissao> permissoes;
 
