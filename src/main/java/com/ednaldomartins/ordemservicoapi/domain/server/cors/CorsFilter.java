@@ -10,15 +10,19 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+
+import com.ednaldomartins.ordemservicoapi.domain.server.config.OrdemServicoApiProperty;
 
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class CorsFilter implements Filter {
 
-	private String origemPermitida = "http://localhost:3000";
+	@Autowired
+	private OrdemServicoApiProperty ordemServicoApiProperty;
 
 	@Override
 	public void doFilter(
@@ -29,11 +33,12 @@ public class CorsFilter implements Filter {
 		HttpServletRequest servletRequest = (HttpServletRequest) request;
 		HttpServletResponse servletResponse = (HttpServletResponse) response;
 		
-		servletResponse.setHeader("Access-Control-Allow-Origin", origemPermitida );
+		servletResponse.setHeader("Access-Control-Allow-Origin", ordemServicoApiProperty.getOrigemPermitida());
 		servletResponse.setHeader("Access-Control-Allow-Credentials", "true");
 		
-		if (servletRequest.getMethod().equals("OPTIONS") && 
-				origemPermitida.equals(servletRequest.getHeader("Origin"))) {
+		if ( servletRequest.getMethod().equals("OPTIONS") && 
+			 ordemServicoApiProperty.getOrigemPermitida().equals(servletRequest.getHeader("Origin"))
+		 ) {
 			servletResponse.setHeader("Access-Control-Allow-Methods", "POST, GET, DELETE, PUT, OPTIONS");
 			servletResponse.setHeader("Access-Control-Allow-Headers", "Authorization, content-Type, Accept");
 			servletResponse.setHeader("Access-Control-Max-Age", "3600");
