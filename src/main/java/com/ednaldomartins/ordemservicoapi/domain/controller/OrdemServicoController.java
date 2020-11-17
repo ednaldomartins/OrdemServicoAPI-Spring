@@ -31,6 +31,7 @@ import com.ednaldomartins.ordemservicoapi.domain.model.OrdemServico;
 import com.ednaldomartins.ordemservicoapi.domain.model.StatusOrdemServico;
 import com.ednaldomartins.ordemservicoapi.presentation.model.OrdemServicoInput;
 import com.ednaldomartins.ordemservicoapi.presentation.model.OrdemServicoPresentation;
+import com.ednaldomartins.ordemservicoapi.presentation.model.OrdemServicoResumoPresentation;
 
 @RestController
 @RequestMapping("/ordens-servico")
@@ -83,19 +84,36 @@ public class OrdemServicoController {
 						pageable
 				));
 	}
-
-	@GetMapping("/{ordemServicoId}")
+	
+	@GetMapping(path = "/{ordemServicoId}")
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_ORDEM_SERVICO') and #oauth2.hasScope('read')")
-	public ResponseEntity<OrdemServicoPresentation> buscarOrdemServico(@PathVariable Long ordemServicoId) {
+	public ResponseEntity<Object> buscarOrdemServico(@PathVariable Long ordemServicoId) {
 		Optional<OrdemServico> ordemServico = 
 				Optional.ofNullable(crudOrdemServico.buscar(ordemServicoId));
 		
+		return checkIsPresentAndResume(ordemServico, false);
+	}
+
+	public ResponseEntity<Object> checkIsPresentAndResume(
+			Optional<OrdemServico> ordemServico,
+			boolean resumo
+	) {
 		if (ordemServico.isPresent()) {
-			OrdemServicoPresentation presentationModel = toPresentation(ordemServico.get());		
+			Object presentationModel = resumo
+					? toResumoPresentation(ordemServico.get())
+					: toPresentation(ordemServico.get());		
 			return ResponseEntity.ok(presentationModel);
 		}
-		
 		return ResponseEntity.notFound().build();
+	}
+	
+	@GetMapping(path = "/{ordemServicoId}", params = "resumo")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_ORDEM_SERVICO') and #oauth2.hasScope('read')")
+	public ResponseEntity<Object> buscarOrdemServicoResumo(@PathVariable Long ordemServicoId) {
+		Optional<OrdemServico> ordemServico = 
+				Optional.ofNullable(crudOrdemServico.buscar(ordemServicoId));
+		
+		return checkIsPresentAndResume(ordemServico, true);
 	}
 	
 	@PostMapping
@@ -134,6 +152,10 @@ public class OrdemServicoController {
 	
 	private OrdemServicoPresentation toPresentation(OrdemServico ordemServico) {
 		return modelMapper.map(ordemServico, OrdemServicoPresentation.class);
+	}
+	
+	private OrdemServicoResumoPresentation toResumoPresentation(OrdemServico ordemServico) {
+		return modelMapper.map(ordemServico, OrdemServicoResumoPresentation.class);
 	}
 	
 	private List<OrdemServicoPresentation> toPresentationList(Page<OrdemServico> ordemServico) {	
