@@ -2,6 +2,7 @@ package com.ednaldomartins.ordemservicoapi.presentation.model;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.List;
 
 import com.ednaldomartins.ordemservicoapi.domain.model.StatusOrdemServico;
 
@@ -14,6 +15,8 @@ public class OrdemServicoPresentation {
 	private StatusOrdemServico statusOrdemServico;
 	private OffsetDateTime dataAbertura;
 	private OffsetDateTime dataFinalizacao;
+	
+	private List<ComentarioWithoutIdPresentation> comentarios;
 	
 	public Long getId() {
 		return id;
@@ -69,6 +72,14 @@ public class OrdemServicoPresentation {
 	
 	public void setDataFinalizacao(OffsetDateTime dataFinalizacao) {
 		this.dataFinalizacao = dataFinalizacao;
+	}
+
+	public List<ComentarioWithoutIdPresentation> getComentarios() {
+		return comentarios;
+	}
+
+	public void setComentarios(List<ComentarioWithoutIdPresentation> comentarios) {
+		this.comentarios = comentarios;
 	}
 	
 }
