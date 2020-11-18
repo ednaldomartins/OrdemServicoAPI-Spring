@@ -4,8 +4,6 @@ create table comentario (
 	descricao text not null,
 	data_envio datetime not null,
     
-	primary key (id)
+	primary key (id),
+	foreign key (ordem_servico_id) references ordem_servico (id)
 );
-
-alter table comentario add constraint fk_comentario_ordem_servico
-foreign key (ordem_servico_id) references ordem_servico (id);

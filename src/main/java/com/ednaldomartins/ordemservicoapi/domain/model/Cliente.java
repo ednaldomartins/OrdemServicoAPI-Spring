@@ -1,6 +1,5 @@
 package com.ednaldomartins.ordemservicoapi.domain.model;
 
-import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -28,8 +27,6 @@ public class Cliente {
 	@Size(max = 255)
 	private String email;
 	
-	//	exemplo de como renomear a variavel na tabela do banco de dados.
-	@Column(name="fone")
 	@NotBlank
 	@Size(max = 20)
 	private String telefone;
